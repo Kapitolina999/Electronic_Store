@@ -12,6 +12,9 @@ class Location(models.Model):
         verbose_name = 'Адрес'
         verbose_name_plural = 'Адреса'
 
+    def __str__(self):
+        return f'{self.country} {self.city} {self.street} {self.number} {self.character}'
+
 
 class Product(models.Model):
     name = models.CharField(verbose_name='Наименование', max_length=255)
@@ -21,6 +24,9 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукция'
+
+    def __str__(self):
+        return f'{self.name} {self.model}'
 
 
 class Store(models.Model):
