@@ -6,10 +6,8 @@ from store.serializers.product_serializers import ProductSerializer
 
 
 class StoreSerializer(serializers.ModelSerializer):
-    # location = LocationSerializer(many=True)
-    # product = ProductSerializer(many=True)
-    location = serializers.ManyRelatedField(child_relation=LocationSerializer())
-    product = serializers.ManyRelatedField(child_relation=ProductSerializer())
+    location = LocationSerializer(many=True)
+    product = ProductSerializer(many=True)
 
     def create(self, validated_data):
         if validated_data['level'] == 0 and validated_data['supplier']:
@@ -17,38 +15,50 @@ class StoreSerializer(serializers.ModelSerializer):
 
         location_data = validated_data.pop('location')
         product_data = validated_data.pop('product')
+        store = Store.objects.create(**validated_data)
 
-        validated_data['location'] = []
-        validated_data['product'] = []
+        locations = []
+        for data in location_data:
+            location_object, _ = Location.objects.get_or_create(**data)
+            locations.append(location_object)
 
-        for location in location_data:
-            location_object, _ = Location.objects.get_or_create(**location)
-            validated_data['location'].append(location_object.pk)
+        location = getattr(store, 'location')
+        location.set(locations)
 
-        for product in product_data:
-            product_object, _ = Product.objects.get_or_create(**product)
-            validated_data['product'].append(product_object.pk)
+        products = []
+        for data in product_data:
+            product_object, _ = Product.objects.get_or_create(**data)
+            products.append(product_object)
 
-        return super().create(validated_data)
+        product = getattr(store, 'product')
+        product.set(products)
 
-    def update(self, instance, validated_data):
+        return store
+
+    def update(self, store, validated_data):
         if validated_data['level'] == 0 and validated_data['supplier']:
             raise serializers.ValidationError('Завод не может иметь поставщика')
 
         location_data = validated_data.pop('location')
         product_data = validated_data.pop('product')
-        validated_data['location'] = []
-        validated_data['product'] = []
 
-        for location in location_data:
-            location_object, _ = Location.objects.get_or_create(**location)
-            validated_data['location'].append(location_object.pk)
+        locations = []
+        for data in location_data:
+            location_object, _ = Location.objects.get_or_create(**data)
+            locations.append(location_object)
 
-        for product in product_data:
-            product_object, _ = Product.objects.get_or_create(**product)
-            validated_data['product'].append(product_object.pk)
+        location = getattr(store, 'location')
+        location.set(locations)
 
-        return super().update(instance, validated_data)
+        products = []
+        for data in product_data:
+            product_object, _ = Product.objects.get_or_create(**data)
+            products.append(product_object)
+
+        product = getattr(store, 'product')
+        product.set(products)
+
+        return super().update(store, validated_data)
 
     class Meta:
         model = Store

@@ -90,20 +90,20 @@ WSGI_APPLICATION = "Electronic_Store.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': env.db(),
-# }
-#
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "USER": "django",
-        "PASSWORD": "django",
-        "NAME": "store",
-        "HOST": "localhost",
-        "PORT": "5432"
-    }
+    'default': env.db(),
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "USER": "django",
+#         "PASSWORD": "django",
+#         "NAME": "store",
+#         "HOST": "localhost",
+#         "PORT": "5432"
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

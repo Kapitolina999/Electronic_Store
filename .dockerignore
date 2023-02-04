@@ -1,0 +1,5 @@
+.env_example
+/venv
+.gitignore
+docker-compose.yaml
+Dockerfile
